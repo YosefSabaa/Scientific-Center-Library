@@ -7,10 +7,11 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 export default async function EditProductPage({
-  params: { id, locale },
+  params,
 }: {
-  params: { id: string; locale: string };
+  params: Promise<{ id: string; locale: string }>;
 }) {
+  const { id, locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'admin' });
   const supabase = await createClient();
@@ -35,7 +36,6 @@ export default async function EditProductPage({
         </Button>
         <h1 className="text-3xl font-bold gradient-text">{t('editProduct')}</h1>
       </div>
-
       <ProductForm categories={categories || []} product={product as any} />
     </div>
   );

@@ -28,11 +28,6 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
-
-  /* RTL Support */
-  [dir="rtl"] body {
-    font-family: var(--font-cairo), system-ui, sans-serif;
-  }
 }
 
 @layer components {
@@ -114,14 +109,8 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-
-  /* RTL fixes */
-  [dir="rtl"] .rtl\:flip {
-    transform: scaleX(-1);
-  }
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -137,19 +126,7 @@
   background: linear-gradient(180deg, #1E3A8A, #7C3AED);
 }
 
-/* Selection */
 ::selection {
   background: #7C3AED;
   color: white;
-}
-
-/* Loading shimmer */
-@keyframes shimmer {
-  0% { background-position: -1000px 0; }
-  100% { background-position: 1000px 0; }
-}
-.shimmer {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite linear;
 }

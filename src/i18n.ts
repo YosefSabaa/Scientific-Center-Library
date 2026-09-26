@@ -6,10 +6,13 @@ export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'ar';
 
 export default getRequestConfig(async ({ locale }) => {
-  if (!locales.includes(locale as Locale)) notFound();
+  const currentLocale = (locale ?? defaultLocale) as Locale;
+
+  if (!locales.includes(currentLocale)) notFound();
 
   return {
-    messages: (await import(`./messages/${locale}.json`)).default,
+    locale: currentLocale,
+    messages: (await import(`./messages/${currentLocale}.json`)).default,
     timeZone: 'Africa/Cairo',
     now: new Date(),
   };

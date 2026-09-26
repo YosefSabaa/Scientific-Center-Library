@@ -22,7 +22,6 @@ export const metadata: Metadata = {
   },
   description:
     'مكتبة المركز العلمي - وجهتك الأولى لكل المستلزمات المكتبية والمدرسية والعلمية بأفضل الأسعار',
-  keywords: ['مكتبة', 'قرطاسية', 'أدوات مكتبية', 'أدوات مدرسية', 'books', 'stationery', 'office supplies'],
   icons: { icon: '/logo.png' },
 };
 
@@ -35,12 +34,7 @@ export default function RootLayout({
     <html suppressHydrationWarning>
       <body className={`${cairo.variable} ${inter.variable} font-sans`}>
         {children}
-        <Toaster
-          position="top-center"
-          richColors
-          closeButton
-          toastOptions={{ duration: 3500 }}
-        />
+        <Toaster position="top-center" richColors closeButton toastOptions={{ duration: 3500 }} />
       </body>
     </html>
   );

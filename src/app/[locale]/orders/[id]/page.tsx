@@ -10,25 +10,28 @@ import { formatPrice, formatDateTime } from '@/lib/format';
 import { ORDER_STATUSES, PAYMENT_STATUSES, PAYMENT_METHODS } from '@/lib/constants';
 
 export default async function OrderDetailsPage({
-  params: { id, locale },
+  params,
 }: {
-  params: { id: string; locale: string };
+  params: Promise<{ id: string; locale: string }>;
 }) {
+  const { id, locale } = await params;
   setRequestLocale(locale);
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect(`/${locale}/auth/login`);
 
   const order: any = await getOrderById(id);
   if (!order || order.user_id !== user.id) notFound();
 
   const t = await getTranslations({ locale, namespace: 'orders' });
-  const tc = await getTranslations({ locale, namespace: 'common' });
   const tch = await getTranslations({ locale, namespace: 'checkout' });
 
   const statusInfo = ORDER_STATUSES[order.status as keyof typeof ORDER_STATUSES];
-  const paymentInfo = PAYMENT_STATUSES[order.payment_status as keyof typeof PAYMENT_STATUSES];
+  const paymentInfo =
+    PAYMENT_STATUSES[order.payment_status as keyof typeof PAYMENT_STATUSES];
   const paymentMethodInfo = PAYMENT_METHODS.find((m) => m.value === order.payment_method);
 
   return (
@@ -40,24 +43,18 @@ export default async function OrderDetailsPage({
         ]}
       />
 
-      {/* Success Banner */}
       <div className="mb-8 flex items-start gap-4 rounded-2xl border-2 border-green-200 bg-green-50 p-6">
         <CheckCircle2 className="h-8 w-8 shrink-0 text-green-600" />
         <div>
-          <h2 className="text-xl font-bold text-green-800">
-            {tch('orderSuccess')}
-          </h2>
+          <h2 className="text-xl font-bold text-green-800">{tch('orderSuccess')}</h2>
           <p className="text-sm text-green-700">{tch('orderSuccessDesc')}</p>
         </div>
       </div>
 
-      {/* Header */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="text-sm text-muted-foreground">{t('orderNumber')}</p>
-          <p className="font-mono text-2xl font-bold gradient-text">
-            {order.order_number}
-          </p>
+          <p className="font-mono text-2xl font-bold gradient-text">{order.order_number}</p>
           <p className="mt-1 text-sm text-muted-foreground">
             {formatDateTime(order.created_at, locale)}
           </p>
@@ -73,7 +70,6 @@ export default async function OrderDetailsPage({
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
-        {/* Items */}
         <div className="space-y-4">
           <h3 className="text-lg font-bold">{t('items')}</h3>
           <div className="space-y-3">
@@ -110,18 +106,20 @@ export default async function OrderDetailsPage({
           </div>
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-4">
-          {/* Summary */}
           <div className="rounded-2xl border border-border bg-white p-6">
             <h3 className="mb-4 text-lg font-bold">{tch('orderSummary')}</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{tc('currency') === 'ج.م' ? 'الإجمالي الفرعي' : 'Subtotal'}</span>
+                <span className="text-muted-foreground">
+                  {locale === 'ar' ? 'الإجمالي الفرعي' : 'Subtotal'}
+                </span>
                 <span className="font-semibold">{formatPrice(order.subtotal, locale)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">{locale === 'ar' ? 'الشحن' : 'Shipping'}</span>
+                <span className="text-muted-foreground">
+                  {locale === 'ar' ? 'الشحن' : 'Shipping'}
+                </span>
                 <span className="font-semibold">{formatPrice(order.shipping, locale)}</span>
               </div>
               <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
@@ -133,7 +131,6 @@ export default async function OrderDetailsPage({
             </div>
           </div>
 
-          {/* Customer Info */}
           <div className="rounded-2xl border border-border bg-white p-6">
             <h3 className="mb-4 text-lg font-bold">{tch('customerInfo')}</h3>
             <ul className="space-y-3 text-sm">
@@ -166,7 +163,6 @@ export default async function OrderDetailsPage({
             </ul>
           </div>
 
-          {/* Receipt */}
           {order.payment_receipt_url && (
             <div className="rounded-2xl border border-border bg-white p-6">
               <h3 className="mb-4 text-lg font-bold">

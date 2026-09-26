@@ -5,13 +5,17 @@ import { getProfile } from '@/lib/supabase/queries';
 import AccountClient from './account-client';
 
 export default async function AccountPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   setRequestLocale(locale);
+
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect(`/${locale}/auth/login`);
 
   const profile = await getProfile(user.id);

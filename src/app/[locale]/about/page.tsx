@@ -1,14 +1,14 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { Target, Eye, Heart, Award, ShieldCheck, Sparkles } from 'lucide-react';
-import { motion } from 'framer-motion';
 import Breadcrumb from '@/components/shared/Breadcrumb';
 import SectionTitle from '@/components/shared/SectionTitle';
 
 export default async function AboutPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'about' });
 
@@ -22,7 +22,6 @@ export default async function AboutPage({
     <div className="container-page py-10">
       <Breadcrumb items={[{ label: t('title') }]} />
 
-      {/* Hero */}
       <section className="relative mb-16 overflow-hidden rounded-3xl bg-gradient-to-br from-brand-dark via-brand-purple to-brand-light p-10 md:p-16 text-white">
         <div className="absolute -top-20 -end-20 h-64 w-64 rounded-full bg-white/20 blur-3xl" />
         <div className="absolute -bottom-20 -start-20 h-64 w-64 rounded-full bg-white/20 blur-3xl" />
@@ -34,7 +33,6 @@ export default async function AboutPage({
         </div>
       </section>
 
-      {/* Story */}
       <section className="mb-16">
         <SectionTitle title={t('story')} align="start" />
         <p className="max-w-3xl text-lg leading-relaxed text-muted-foreground">
@@ -42,7 +40,6 @@ export default async function AboutPage({
         </p>
       </section>
 
-      {/* Mission & Vision */}
       <section className="mb-16 grid gap-6 md:grid-cols-2">
         <div className="rounded-3xl border-2 border-brand-purple/20 bg-gradient-to-br from-brand-purple/5 to-transparent p-8">
           <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-purple to-brand-light text-white shadow-lg">
@@ -61,7 +58,6 @@ export default async function AboutPage({
         </div>
       </section>
 
-      {/* Values */}
       <section>
         <SectionTitle title={t('values')} />
         <div className="grid gap-6 md:grid-cols-3">
@@ -70,7 +66,9 @@ export default async function AboutPage({
               key={idx}
               className="group rounded-2xl border border-border bg-white p-6 transition-all hover:-translate-y-2 hover:shadow-xl"
             >
-              <div className={`mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${value.color} text-white shadow-lg transition-transform group-hover:rotate-6`}>
+              <div
+                className={`mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${value.color} text-white shadow-lg transition-transform group-hover:rotate-6`}
+              >
                 <value.icon className="h-7 w-7" />
               </div>
               <h3 className="mb-2 text-xl font-bold">{value.title}</h3>

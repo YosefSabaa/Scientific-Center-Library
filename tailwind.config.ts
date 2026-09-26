@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  darkMode: ['class'],
+  darkMode: 'class',
   content: ['./src/**/*.{ts,tsx,js,jsx,mdx}'],
   theme: {
     container: {
@@ -31,11 +31,11 @@ const config: Config = {
         'fade-in': 'fadeIn 0.6s ease-out',
         'slide-up': 'slideUp 0.6s ease-out',
         'slide-down': 'slideDown 0.4s ease-out',
-        'float': 'float 3s ease-in-out infinite',
-        'gradient': 'gradient 8s ease infinite',
+        float: 'float 3s ease-in-out infinite',
+        gradient: 'gradient 8s ease infinite',
         'spin-slow': 'spin 8s linear infinite',
         'pulse-slow': 'pulse 4s ease-in-out infinite',
-        'marquee': 'marquee 30s linear infinite',
+        marquee: 'marquee 30s linear infinite',
       },
       keyframes: {
         fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },

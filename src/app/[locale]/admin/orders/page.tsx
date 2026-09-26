@@ -8,10 +8,11 @@ import { ORDER_STATUSES, PAYMENT_STATUSES } from '@/lib/constants';
 import OrderStatusSelect from '@/components/admin/OrderStatusSelect';
 
 export default async function AdminOrdersPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'admin' });
   const supabase = await createClient();
@@ -33,7 +34,8 @@ export default async function AdminOrdersPage({
         <div className="space-y-4">
           {orders.map((order: any) => {
             const statusInfo = ORDER_STATUSES[order.status as keyof typeof ORDER_STATUSES];
-            const paymentInfo = PAYMENT_STATUSES[order.payment_status as keyof typeof PAYMENT_STATUSES];
+            const paymentInfo =
+              PAYMENT_STATUSES[order.payment_status as keyof typeof PAYMENT_STATUSES];
             return (
               <div
                 key={order.id}
@@ -119,7 +121,13 @@ export default async function AdminOrdersPage({
                         rel="noopener noreferrer"
                         className="relative h-20 w-20 overflow-hidden rounded-xl border border-border"
                       >
-                        <Image src={order.payment_receipt_url} alt="Receipt" fill className="object-cover" sizes="80px" />
+                        <Image
+                          src={order.payment_receipt_url}
+                          alt="Receipt"
+                          fill
+                          className="object-cover"
+                          sizes="80px"
+                        />
                       </a>
                     )}
                   </div>

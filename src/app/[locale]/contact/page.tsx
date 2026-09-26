@@ -1,13 +1,14 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
-import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Twitter, MessageCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, AtSign, Camera, Send, MessageCircle } from 'lucide-react';
 import Breadcrumb from '@/components/shared/Breadcrumb';
 import { STORE_INFO, SOCIAL_LINKS } from '@/lib/constants';
 
 export default async function ContactPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'contact' });
 
@@ -37,9 +38,9 @@ export default async function ContactPage({
   ];
 
   const socials = [
-    { href: SOCIAL_LINKS.facebook, icon: Facebook, label: 'Facebook' },
-    { href: SOCIAL_LINKS.instagram, icon: Instagram, label: 'Instagram' },
-    { href: SOCIAL_LINKS.twitter, icon: Twitter, label: 'Twitter' },
+    { href: SOCIAL_LINKS.facebook, icon: AtSign, label: 'Facebook' },
+    { href: SOCIAL_LINKS.instagram, icon: Camera, label: 'Instagram' },
+    { href: SOCIAL_LINKS.twitter, icon: Send, label: 'Twitter' },
     { href: SOCIAL_LINKS.whatsapp, icon: MessageCircle, label: 'WhatsApp' },
   ];
 
@@ -48,9 +49,7 @@ export default async function ContactPage({
       <Breadcrumb items={[{ label: t('title') }]} />
 
       <div className="mb-12 text-center">
-        <h1 className="mb-3 text-4xl font-bold gradient-text md:text-5xl">
-          {t('title')}
-        </h1>
+        <h1 className="mb-3 text-4xl font-bold gradient-text md:text-5xl">{t('title')}</h1>
         <p className="text-muted-foreground">{t('subtitle')}</p>
       </div>
 
@@ -79,7 +78,6 @@ export default async function ContactPage({
         ))}
       </div>
 
-      {/* Social */}
       <div className="mt-16 text-center">
         <h2 className="mb-6 text-2xl font-bold">{t('followUs')}</h2>
         <div className="flex justify-center gap-3">

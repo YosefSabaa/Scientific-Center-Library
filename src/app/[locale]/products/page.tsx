@@ -4,29 +4,33 @@ import { getCategories, getProducts } from '@/lib/supabase/queries';
 import ProductsClient from './products-client';
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'products' });
   return { title: t('title') };
 }
 
 export default async function ProductsPage({
-  params: { locale },
+  params,
   searchParams,
 }: {
-  params: { locale: string };
-  searchParams: { search?: string; featured?: string; sort?: string };
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ search?: string; featured?: string; sort?: string }>;
 }) {
+  const { locale } = await params;
+  const sp = await searchParams;
+
   setRequestLocale(locale);
 
   const [categories, products] = await Promise.all([
     getCategories(),
     getProducts({
-      search: searchParams.search,
-      featured: searchParams.featured === 'true',
-      sort: (searchParams.sort as any) || 'newest',
+      search: sp.search,
+      featured: sp.featured === 'true',
+      sort: (sp.sort as any) || 'newest',
     }),
   ]);
 
@@ -35,7 +39,7 @@ export default async function ProductsPage({
       <ProductsClient
         initialProducts={products}
         categories={categories}
-        initialSearch={searchParams.search || ''}
+        initialSearch={sp.search || ''}
       />
     </Suspense>
   );

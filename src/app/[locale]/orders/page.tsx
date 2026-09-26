@@ -13,28 +13,31 @@ import { formatPrice, formatDateTime } from '@/lib/format';
 import { ORDER_STATUSES, PAYMENT_STATUSES } from '@/lib/constants';
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'orders' });
   return { title: t('title') };
 }
 
 export default async function OrdersPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   setRequestLocale(locale);
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect(`/${locale}/auth/login`);
 
   const orders = await getUserOrders(user.id);
   const t = await getTranslations({ locale, namespace: 'orders' });
-  const tc = await getTranslations({ locale, namespace: 'common' });
   const isRTL = locale === 'ar';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
 
@@ -42,9 +45,7 @@ export default async function OrdersPage({
     <div className="container-page py-10">
       <Breadcrumb items={[{ label: t('title') }]} />
 
-      <h1 className="mb-8 text-4xl font-bold gradient-text md:text-5xl">
-        {t('title')}
-      </h1>
+      <h1 className="mb-8 text-4xl font-bold gradient-text md:text-5xl">{t('title')}</h1>
 
       {orders.length === 0 ? (
         <EmptyState
@@ -61,7 +62,8 @@ export default async function OrdersPage({
         <div className="space-y-4">
           {orders.map((order: any) => {
             const statusInfo = ORDER_STATUSES[order.status as keyof typeof ORDER_STATUSES];
-            const paymentInfo = PAYMENT_STATUSES[order.payment_status as keyof typeof PAYMENT_STATUSES];
+            const paymentInfo =
+              PAYMENT_STATUSES[order.payment_status as keyof typeof PAYMENT_STATUSES];
             return (
               <div
                 key={order.id}
@@ -100,7 +102,13 @@ export default async function OrdersPage({
                         className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-brand-purple/5"
                       >
                         {item.image_url && (
-                          <Image src={item.image_url} alt="" fill className="object-cover" sizes="64px" />
+                          <Image
+                            src={item.image_url}
+                            alt=""
+                            fill
+                            className="object-cover"
+                            sizes="64px"
+                          />
                         )}
                       </div>
                     ))}

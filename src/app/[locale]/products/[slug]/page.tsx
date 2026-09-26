@@ -13,10 +13,11 @@ import { getLocalizedName } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export async function generateMetadata({
-  params: { slug, locale },
+  params,
 }: {
-  params: { slug: string; locale: string };
+  params: Promise<{ slug: string; locale: string }>;
 }) {
+  const { slug, locale } = await params;
   const product = await getProductBySlug(slug);
   if (!product) return { title: 'Not Found' };
   return {
@@ -26,10 +27,11 @@ export async function generateMetadata({
 }
 
 export default async function ProductDetailsPage({
-  params: { slug, locale },
+  params,
 }: {
-  params: { slug: string; locale: string };
+  params: Promise<{ slug: string; locale: string }>;
 }) {
+  const { slug, locale } = await params;
   setRequestLocale(locale);
 
   const product = await getProductBySlug(slug);
@@ -69,7 +71,6 @@ export default async function ProductDetailsPage({
         <ProductInfo product={product} variants={variants} />
       </div>
 
-      {/* Tabs: Description / Specs / Reviews */}
       <div className="mt-16">
         <Tabs defaultValue="description">
           <TabsList className="w-full justify-start overflow-x-auto">
@@ -78,7 +79,10 @@ export default async function ProductDetailsPage({
             <TabsTrigger value="reviews">{t('reviews')}</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="description" className="prose prose-lg max-w-none rounded-2xl border border-border bg-white p-6">
+          <TabsContent
+            value="description"
+            className="prose prose-lg max-w-none rounded-2xl border border-border bg-white p-6"
+          >
             <p className="leading-relaxed text-muted-foreground whitespace-pre-line">
               {(locale === 'ar' ? product.description_ar : product.description_en) ||
                 (locale === 'ar' ? 'لا يوجد وصف' : 'No description')}

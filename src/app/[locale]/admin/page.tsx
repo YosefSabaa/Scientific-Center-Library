@@ -6,13 +6,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatPrice, formatDateTime } from '@/lib/format';
 import { ORDER_STATUSES } from '@/lib/constants';
-import { Package, ArrowLeft, ArrowRight, TrendingUp } from 'lucide-react';
+import { Package, ArrowLeft, ArrowRight } from 'lucide-react';
 
 export default async function AdminDashboard({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'admin' });
   const supabase = await createClient();
@@ -28,17 +29,14 @@ export default async function AdminDashboard({
     supabase.from('products').select('*', { count: 'exact', head: true }),
     supabase.from('orders').select('*', { count: 'exact', head: true }),
     supabase.from('orders').select('total, status'),
-    supabase
-      .from('orders')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(8),
+    supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(8),
   ]);
 
-  const totalRevenue = allOrders?.reduce(
-    (sum, o) => (o.status !== 'cancelled' ? sum + Number(o.total) : sum),
-    0
-  ) || 0;
+  const totalRevenue =
+    allOrders?.reduce(
+      (sum, o) => (o.status !== 'cancelled' ? sum + Number(o.total) : sum),
+      0
+    ) || 0;
   const pendingOrders = allOrders?.filter((o) => o.status === 'pending').length || 0;
 
   return (
@@ -57,7 +55,6 @@ export default async function AdminDashboard({
         pendingOrders={pendingOrders}
       />
 
-      {/* Recent Orders */}
       <div className="rounded-2xl border border-border bg-white p-6">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-lg font-bold">{t('recentOrders')}</h2>

@@ -7,10 +7,11 @@ import { Plus, Edit, Grid3X3 } from 'lucide-react';
 import { getLocalizedName } from '@/lib/utils';
 
 export default async function AdminCategoriesPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'admin' });
   const supabase = await createClient();

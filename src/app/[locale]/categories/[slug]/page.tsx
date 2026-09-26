@@ -6,20 +6,22 @@ import Breadcrumb from '@/components/shared/Breadcrumb';
 import { getLocalizedName, getLocalizedDescription } from '@/lib/utils';
 
 export async function generateMetadata({
-  params: { slug, locale },
+  params,
 }: {
-  params: { slug: string; locale: string };
+  params: Promise<{ slug: string; locale: string }>;
 }) {
+  const { slug, locale } = await params;
   const category = await getCategoryBySlug(slug);
   if (!category) return { title: 'Not Found' };
   return { title: getLocalizedName(category, locale) };
 }
 
 export default async function CategoryPage({
-  params: { slug, locale },
+  params,
 }: {
-  params: { slug: string; locale: string };
+  params: Promise<{ slug: string; locale: string }>;
 }) {
+  const { slug, locale } = await params;
   setRequestLocale(locale);
 
   const category = await getCategoryBySlug(slug);

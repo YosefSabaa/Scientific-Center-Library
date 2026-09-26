@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import { Facebook, Instagram, Twitter, Phone, Mail, MapPin, MessageCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageCircle, Send, Camera, AtSign } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 import { STORE_INFO, SOCIAL_LINKS } from '@/lib/constants';
 
@@ -27,9 +27,9 @@ export default function Footer() {
   ];
 
   const socials = [
-    { href: SOCIAL_LINKS.facebook, icon: Facebook },
-    { href: SOCIAL_LINKS.instagram, icon: Instagram },
-    { href: SOCIAL_LINKS.twitter, icon: Twitter },
+    { href: SOCIAL_LINKS.facebook, icon: AtSign },
+    { href: SOCIAL_LINKS.instagram, icon: Camera },
+    { href: SOCIAL_LINKS.twitter, icon: Send },
     { href: SOCIAL_LINKS.whatsapp, icon: MessageCircle },
   ];
 
@@ -42,7 +42,7 @@ export default function Footer() {
       <div className="container-page relative py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
-            <Logo size="md" className="text-white" />
+            <Logo size="md" />
             <p className="text-sm text-white/70 leading-relaxed">{t('about')}</p>
             <div className="flex items-center gap-2">
               {socials.map((s, i) => (

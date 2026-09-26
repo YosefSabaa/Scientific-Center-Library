@@ -1,4 +1,3 @@
- 
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -10,10 +9,11 @@ import { formatPrice } from '@/lib/format';
 import { getLocalizedName } from '@/lib/utils';
 
 export default async function AdminProductsPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'admin' });
   const supabase = await createClient();
@@ -73,7 +73,13 @@ export default async function AdminProductsPage({
                       <div className="flex items-center gap-3">
                         <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-brand-purple/5">
                           {p.images?.[0] && (
-                            <Image src={p.images[0]} alt="" fill className="object-cover" sizes="48px" />
+                            <Image
+                              src={p.images[0]}
+                              alt=""
+                              fill
+                              className="object-cover"
+                              sizes="48px"
+                            />
                           )}
                         </div>
                         <div className="min-w-0">

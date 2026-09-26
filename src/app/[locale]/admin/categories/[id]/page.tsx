@@ -7,10 +7,11 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 export default async function EditCategoryPage({
-  params: { id, locale },
+  params,
 }: {
-  params: { id: string; locale: string };
+  params: Promise<{ id: string; locale: string }>;
 }) {
+  const { id, locale } = await params;
   setRequestLocale(locale);
   const supabase = await createClient();
   const { data: category } = await supabase

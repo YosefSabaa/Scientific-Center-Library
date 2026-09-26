@@ -10,10 +10,11 @@ import Banner from '@/components/home/Banner';
 import Newsletter from '@/components/home/Newsletter';
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'common' });
   return {
     title: t('storeName'),
@@ -22,10 +23,11 @@ export async function generateMetadata({
 }
 
 export default async function HomePage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   setRequestLocale(locale);
 
   const [categories, featuredProducts, newProducts] = await Promise.all([

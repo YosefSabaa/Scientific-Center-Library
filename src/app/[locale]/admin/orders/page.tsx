@@ -6,6 +6,7 @@ import { ShoppingBag } from 'lucide-react';
 import { formatPrice, formatDateTime } from '@/lib/format';
 import { ORDER_STATUSES, PAYMENT_STATUSES } from '@/lib/constants';
 import OrderStatusSelect from '@/components/admin/OrderStatusSelect';
+import PaymentActions from '@/components/admin/PaymentActions';
 
 export default async function AdminOrdersPage({
   params,
@@ -105,7 +106,7 @@ export default async function AdminOrdersPage({
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-end gap-2">
+                  <div className="flex flex-col items-end gap-3">
                     <div className="text-end">
                       <p className="text-xs text-muted-foreground">
                         {locale === 'ar' ? 'الإجمالي' : 'Total'}
@@ -114,21 +115,14 @@ export default async function AdminOrdersPage({
                         {formatPrice(Number(order.total), locale)}
                       </p>
                     </div>
-                    {order.payment_receipt_url && (
-                      <a
-                        href={order.payment_receipt_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="relative h-20 w-20 overflow-hidden rounded-xl border border-border"
-                      >
-                        <Image
-                          src={order.payment_receipt_url}
-                          alt="Receipt"
-                          fill
-                          className="object-cover"
-                          sizes="80px"
-                        />
-                      </a>
+
+                    {/* أزرار قبول/رفض الدفع */}
+                    {(order.payment_method === 'instapay' || order.payment_method === 'wallet') && (
+                      <PaymentActions
+                        orderId={order.id}
+                        receiptUrl={order.payment_receipt_url}
+                        currentStatus={order.payment_status}
+                      />
                     )}
                   </div>
                 </div>

@@ -1,0 +1,39 @@
+{
+  "name": "مكتبة المركز العلمي",
+  "short_name": "المركز العلمي",
+  "description": "كل ما تحتاجه من قرطاسية وأدوات مكتبية بأفضل الأسعار",
+  "start_url": "/ar",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1E3A8A",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "education"],
+  "shortcuts": [
+    {
+      "name": "المنتجات",
+      "short_name": "منتجات",
+      "url": "/ar/products"
+    },
+    {
+      "name": "سلة التسوق",
+      "short_name": "السلة",
+      "url": "/ar/cart"
+    }
+  ]
+}

@@ -4,9 +4,8 @@ import { Toaster } from 'sonner';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import PWARegister from '@/components/shared/PWARegister';
-import './globals.css';
 import GoogleAnalytics from '@/components/shared/GoogleAnalytics';
-
+import './globals.css';
 
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
@@ -33,6 +32,9 @@ export const metadata: Metadata = {
     capable: true,
     title: 'المركز العلمي',
     statusBarStyle: 'default',
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || '',
   },
 };
 

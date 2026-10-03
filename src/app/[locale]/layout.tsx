@@ -24,7 +24,9 @@ export async function generateMetadata({
   return {
     metadataBase: new URL(baseUrl),
     title: {
-      default: isAr ? 'مكتبة المركز العلمي | كل ما يحتاجه العلم' : 'Scientific Center Bookstore',
+      default: isAr
+        ? 'مكتبة المركز العلمي | كل ما يحتاجه العلم'
+        : 'Scientific Center Bookstore',
       template: isAr ? '%s | مكتبة المركز العلمي' : '%s | Scientific Center',
     },
     description: isAr
@@ -55,7 +57,9 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
       title: isAr ? 'مكتبة المركز العلمي' : 'Scientific Center Bookstore',
-      description: isAr ? 'كل ما تحتاجه من قرطاسية وأدوات مكتبية' : 'Everything you need',
+      description: isAr
+        ? 'كل ما تحتاجه من قرطاسية وأدوات مكتبية'
+        : 'Everything you need',
       images: ['/logo.png'],
     },
     robots: {

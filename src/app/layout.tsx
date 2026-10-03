@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Cairo, Inter } from 'next/font/google';
 import { Toaster } from 'sonner';
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import PWARegister from '@/components/shared/PWARegister';
 import './globals.css';

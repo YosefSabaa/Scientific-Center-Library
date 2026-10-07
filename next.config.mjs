@@ -14,7 +14,6 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
-  // ❌ احذف redirects() من هنا
 };
 
 export default withNextIntl(nextConfig);

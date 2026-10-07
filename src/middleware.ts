@@ -1,16 +1,28 @@
-import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
-import { locales, defaultLocale } from './i18n';
-
-const intlMiddleware = createMiddleware({
-  locales,
-  defaultLocale,
-  localePrefix: 'always',
-});
 
 export async function middleware(request: NextRequest) {
-  const response = intlMiddleware(request);
+  const pathname = request.nextUrl.pathname;
+
+  // إذا كان المسار / أو فارغاً — أعد كتابته داخلياً إلى /ar (بدون redirect)
+  if (pathname === '/' || pathname === '') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/ar';
+    return NextResponse.rewrite(url);
+  }
+
+  // إذا كان المسار لا يبدأ بـ /ar أو /en ولم يكن مساراً خاصاً
+  const isLocalePath = /^\/(ar|en)(\/|$)/.test(pathname);
+  const isSpecialPath = /^\/(api|_next|_vercel|.*\..*)/.test(pathname);
+
+  if (!isLocalePath && !isSpecialPath) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/ar${pathname}`;
+    return NextResponse.rewrite(url);
+  }
+
+  // بقية الحماية (admin, auth, account, orders, checkout)
+  const response = NextResponse.next();
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -28,11 +40,8 @@ export async function middleware(request: NextRequest) {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
+  const locale = pathname.split('/')[1] || 'ar';
 
-  const pathname = request.nextUrl.pathname;
-  const locale = pathname.split('/')[1] || defaultLocale;
-
-  // Admin protection
   if (/^\/(ar|en)\/admin/.test(pathname)) {
     if (!user) {
       return NextResponse.redirect(new URL(`/${locale}/auth/login`, request.url));
@@ -44,12 +53,10 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Auth pages: redirect logged-in users
   if (/^\/(ar|en)\/auth\/(login|register)/.test(pathname) && user) {
     return NextResponse.redirect(new URL(`/${locale}`, request.url));
   }
 
-  // Protected user pages
   if (/^\/(ar|en)\/(account|orders|checkout)/.test(pathname) && !user) {
     return NextResponse.redirect(new URL(`/${locale}/auth/login`, request.url));
   }
